@@ -7,12 +7,15 @@ package javasoctialpassword;
 
 import java.io.PrintWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.security.SecureRandom;
+import java.util.Scanner;
+import javax.swing.JFileChooser;
 
 
 /**
@@ -50,6 +53,7 @@ public class JTableSP extends javax.swing.JFrame {
         jTable2 = new javax.swing.JTable();
         btnSave = new javax.swing.JButton();
         btnPassWordGeneration = new javax.swing.JButton();
+        btnLoad = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -125,6 +129,14 @@ public class JTableSP extends javax.swing.JFrame {
             }
         });
 
+        btnLoad.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        btnLoad.setText("Load");
+        btnLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -132,28 +144,26 @@ public class JTableSP extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(53, 53, 53)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 567, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 209, Short.MAX_VALUE))
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(btnSave)
+                        .addGap(24, 24, 24)
+                        .addComponent(btnPassWordGeneration)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30)
-                                .addComponent(btnSave)
-                                .addGap(24, 24, 24)
-                                .addComponent(btnPassWordGeneration))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addGap(38, 38, 38)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap(237, Short.MAX_VALUE))))
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addGap(38, 38, 38)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,7 +187,8 @@ public class JTableSP extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPassWordGeneration, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnPassWordGeneration, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(107, Short.MAX_VALUE))
@@ -270,6 +281,43 @@ String passwordString = password.toString();
     
     }//GEN-LAST:event_btnPassWordGenerationActionPerformed
 
+    private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
+        // TODO add your handling code here:
+         JFileChooser fileChooser = new JFileChooser();
+    int result = fileChooser.showOpenDialog(this);
+    
+    if (result == JFileChooser.APPROVE_OPTION) {
+        File selectedFile = fileChooser.getSelectedFile();
+        
+        try {
+            Scanner scanner = new Scanner(selectedFile);
+
+            DefaultTableModel tblModel = (DefaultTableModel) jTable2.getModel();
+            tblModel.setRowCount(0);
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] data = line.split(",");
+
+                if (data.length == 3) {
+                    String name = data[0].trim().replace("Social Network: ", "");
+                    String login = data[1].trim().replace("Login: ", "");
+                    String password = data[2].trim().replace("Password: ", "");
+
+                    tblModel.addRow(new String[]{name, login, password});
+                }
+            }
+
+            scanner.close();
+            
+            JOptionPane.showMessageDialog(this, "Data uploaded successfully!");
+
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "Error: File not found!");
+        }
+    }
+    }//GEN-LAST:event_btnLoadActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -308,6 +356,7 @@ String passwordString = password.toString();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnLoad;
     private javax.swing.JButton btnPassWordGeneration;
     private javax.swing.JButton btnSave;
     private javax.swing.JLabel jLabel1;
